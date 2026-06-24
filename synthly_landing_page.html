@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Synthly Dark Mode</title>
+  <style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-weight:400;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  background:#050505;
+  color:#fff;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit}
+button{cursor:pointer}
+svg,video,img{display:block;max-width:100%}
+
+:root{
+  --sdm-black:#050505;
+  --sdm-ink:#ffffff;
+  --sdm-muted:#b7bdc8;
+  --sdm-soft:#8d94a3;
+  --sdm-line:rgba(255,255,255,.14);
+  --sdm-glass:rgba(0,0,0,.4);
+  --sdm-card:rgba(255,255,255,.06);
+  --sdm-lime:#d6ff63;
+  --sdm-cyan:#8be8ff;
+  --sdm-violet:#a78bfa;
+}
+
+@keyframes sdmGradientMove{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes sdmFloat{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-12px,0)}}
+@keyframes sdmScan{0%{transform:translateY(-120%);opacity:0}20%{opacity:1}78%{opacity:.7}100%{transform:translateY(660%);opacity:0}}
+@keyframes sdmBlink{0%,100%{opacity:.35}35%,58%{opacity:1}}
+@keyframes sdmBar{0%,100%{transform:scaleY(.58)}50%{transform:scaleY(1)}}
+@keyframes sdmMarquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+.liquid-glass{
+  background:rgba(0,0,0,.4);
+  background-blend-mode:luminosity;
+  -webkit-backdrop-filter:blur(4px);
+  backdrop-filter:blur(4px);
+  border:none;
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.1);
+  position:relative;
+  overflow:hidden;
+}
+.liquid-glass::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  padding:1.4px;
+  background:linear-gradient(180deg,rgba(255,255,255,.3) 0%,rgba(255,255,255,.1) 20%,rgba(255,255,255,0) 40%,rgba(255,255,255,0) 60%,rgba(255,255,255,.1) 80%,rgba(255,255,255,.3) 100%);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
+}
+
+.sdm-page{
+  width:100%;
+  min-height:100vh;
+  background:#050505;
+  color:#fff;
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  overflow:hidden;
+}
+.sdm-section{
+  position:relative;
+  padding:96px clamp(20px,5vw,72px);
+}
+.sdm-container{
+  width:min(1180px,100%);
+  margin:0 auto;
+}
+.sdm-center{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+}
+.sdm-eyebrow{
+  color:#9ca3af;
+  font-size:12px;
+  font-weight:400;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  margin-bottom:18px;
+}
+.sdm-title{
+  max-width:880px;
+  color:#fff;
+  font-size:clamp(38px,6.4vw,76px);
+  line-height:.96;
+  font-weight:400;
+  letter-spacing:-.04em;
+}
+.sdm-copy{
+  max-width:700px;
+  margin-top:20px;
+  color:#b7bdc8;
+  font-size:clamp(16px,2vw,19px);
+  line-height:1.68;
+}
+.sdm-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  min-height:46px;
+  border-radius:8px;
+  padding:0 24px;
+  border:1px solid transparent;
+  color:#050505;
+  background:#fff;
+  font-size:15px;
+  font-weight:500;
+  transition:color .22s ease,background-color .22s ease,border-color .22s ease,transform .22s ease;
+  white-space:nowrap;
+}
+.sdm-btn:hover{background:#f1f5f9;transform:translateY(-1px)}
+.sdm-btn svg{width:17px;height:17px}
+.sdm-btn-glass{
+  color:#fff;
+  background:rgba(0,0,0,.4);
+  border-color:rgba(255,255,255,.2);
+}
+.sdm-btn-glass:hover{background:#fff;color:#050505;border-color:#fff}
+
+.sdm-hero{
+  position:relative;
+  min-height:100vh;
+  background:#000;
+  color:#fff;
+  overflow:hidden;
+  isolation:isolate;
+}
+.sdm-hero-video{
+  position:absolute;
+  inset:0;
+  z-index:-3;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  filter:saturate(.95) contrast(1.04);
+}
+.sdm-hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-2;
+  background:linear-gradient(180deg,rgba(0,0,0,.42),rgba(0,0,0,.18) 42%,rgba(0,0,0,.66)),linear-gradient(90deg,rgba(0,0,0,.72),rgba(0,0,0,.16) 50%,rgba(0,0,0,.72));
+}
+.sdm-hero-content{
+  position:relative;
+  z-index:10;
+  min-height:100vh;
+}
+.sdm-nav-wrap{
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  z-index:30;
+  padding:24px clamp(24px,4vw,64px) 0;
+}
+.sdm-nav{
+  width:100%;
+  min-height:58px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  border-radius:12px;
+  padding:8px 16px;
+}
+.sdm-brand{
+  color:#fff;
+  font-size:24px;
+  line-height:1;
+  font-weight:600;
+  letter-spacing:-.04em;
+  white-space:nowrap;
+}
+.sdm-nav-links{
+  display:flex;
+  align-items:center;
+  gap:32px;
+  color:#e5e7eb;
+  font-size:14px;
+}
+.sdm-nav-links a{
+  transition:color .2s ease;
+}
+.sdm-nav-links a:hover{color:#9ca3af}
+.sdm-nav-cta{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:42px;
+  padding:0 24px;
+  border-radius:8px;
+  color:#050505;
+  background:#fff;
+  font-size:14px;
+  font-weight:500;
+  transition:background-color .2s ease;
+}
+.sdm-nav-cta:hover{background:#f3f4f6}
+.sdm-mobile-menu{display:none}
+.sdm-hero-center{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:120px clamp(24px,4vw,64px) 130px;
+  text-align:center;
+}
+.sdm-hero-inner{
+  width:100%;
+  max-width:900px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.sdm-animated-heading{
+  margin:0 0 16px;
+  color:#fff;
+  font-size:clamp(42px,7vw,82px);
+  line-height:.98;
+  font-weight:400;
+  letter-spacing:-.04em;
+}
+.sdm-animated-heading .sdm-line{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.sdm-word{
+  display:inline-flex;
+  white-space:nowrap;
+}
+.sdm-space{
+  display:inline-block;
+  width:.28em;
+}
+.sdm-char{
+  display:inline-block;
+  opacity:0;
+  transform:translateX(-18px);
+  transition:opacity .5s ease,transform .5s ease;
+  will-change:opacity,transform;
+}
+.sdm-animated-heading.is-visible .sdm-char{
+  opacity:1;
+  transform:translateX(0);
+}
+.sdm-fade{
+  opacity:0;
+  transition-property:opacity;
+  transition-timing-function:ease;
+  transition-duration:var(--duration,800ms);
+}
+.sdm-fade.is-visible{opacity:1}
+.sdm-hero-sub{
+  max-width:680px;
+  color:#d1d5db;
+  font-size:clamp(16px,2vw,19px);
+  line-height:1.65;
+  margin-bottom:22px;
+}
+.sdm-hero-actions{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:16px;
+}
+.sdm-bottom-pill-wrap{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:20;
+  display:flex;
+  justify-content:center;
+  padding:0 clamp(24px,4vw,64px) clamp(48px,6vw,64px);
+}
+.sdm-bottom-pill{
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.2);
+  padding:12px 24px;
+}
+.sdm-bottom-pill p{
+  color:#fff;
+  font-size:clamp(18px,2.2vw,28px);
+  font-weight:300;
+  line-height:1.2;
+}
+
+.sdm-proof{
+  overflow:hidden;
+  border-top:1px solid rgba(255,255,255,.08);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  background:#060606;
+  padding:18px 0;
+}
+.sdm-proof-track{
+  display:flex;
+  width:max-content;
+  gap:46px;
+  animation:sdmMarquee 25s linear infinite;
+}
+.sdm-proof span{
+  color:#b7bdc8;
+  font-size:14px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+
+.sdm-problem{
+  background:#050505;
+}
+.sdm-problem-grid{
+  display:grid;
+  grid-template-columns:.88fr 1.12fr;
+  gap:46px;
+  align-items:start;
+}
+.sdm-problem-list{
+  display:grid;
+  gap:14px;
+}
+.sdm-problem-card{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:16px;
+  min-height:144px;
+  padding:22px;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;
+  background:rgba(255,255,255,.045);
+}
+.sdm-problem-card b{
+  width:36px;
+  height:36px;
+  display:grid;
+  place-items:center;
+  border-radius:8px;
+  background:#fff;
+  color:#050505;
+  font-size:13px;
+  font-weight:500;
+}
+.sdm-problem-card h3{
+  margin-bottom:8px;
+  color:#fff;
+  font-size:22px;
+  line-height:1.08;
+  font-weight:400;
+  letter-spacing:-.03em;
+}
+.sdm-problem-card p{
+  color:#aab0bd;
+  font-size:15px;
+  line-height:1.6;
+}
+
+.sdm-interface{
+  background:#0b0d12;
+  overflow:hidden;
+}
+.sdm-interface-grid{
+  display:grid;
+  grid-template-columns:.82fr 1.18fr;
+  gap:44px;
+  align-items:center;
+}
+.sdm-chip-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+  margin-top:28px;
+}
+.sdm-chip-row span{
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;
+  background:rgba(255,255,255,.05);
+  color:#d7dce5;
+  padding:9px 12px;
+  font-size:13px;
+}
+.sdm-lab{
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:8px;
+  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.035));
+  box-shadow:0 34px 110px rgba(0,0,0,.46);
+  padding:18px;
+}
+.sdm-lab-top{
+  height:48px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:14px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;
+  background:rgba(0,0,0,.32);
+  padding:0 14px;
+}
+.sdm-dot{width:10px;height:10px;border-radius:50%;background:#ff6b61}
+.sdm-dot.y{background:#ffd166}.sdm-dot.g{background:#63d889}
+.sdm-url{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  margin-left:8px;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:999px;
+  color:#cbd5e1;
+  background:rgba(255,255,255,.07);
+  padding:7px 12px;
+  font-size:12px;
+}
+.sdm-lab-grid{
+  display:grid;
+  grid-template-columns:.9fr 1.1fr;
+  gap:14px;
+}
+.sdm-builder-panel{
+  min-height:440px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;
+  background:#10141c;
+  padding:16px;
+  position:relative;
+  overflow:hidden;
+}
+.sdm-builder-panel::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size:32px 32px;
+  pointer-events:none;
+}
+.sdm-scanline{
+  position:absolute;
+  inset:0;
+  height:38%;
+  background:linear-gradient(180deg,transparent,rgba(139,232,255,.12),transparent);
+  animation:sdmScan 5s ease-in-out infinite;
+}
+.sdm-builder-card{
+  position:relative;
+  z-index:2;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;
+  background:rgba(0,0,0,.35);
+  padding:14px;
+  margin-bottom:12px;
+}
+.sdm-builder-card h3{
+  color:#fff;
+  font-size:15px;
+  font-weight:400;
+  margin-bottom:9px;
+}
+.sdm-builder-card p{
+  color:#aab0bd;
+  font-size:12px;
+  line-height:1.5;
+}
+.sdm-prompt-bar{
+  position:absolute;
+  z-index:3;
+  left:18px;
+  right:18px;
+  bottom:18px;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:8px;
+  background:rgba(0,0,0,.46);
+  padding:14px;
+}
+.sdm-prompt-bar strong{
+  display:block;
+  color:#fff;
+  font-size:15px;
+  font-weight:400;
+  margin-bottom:8px;
+}
+.sdm-prompt-line{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  color:#b7bdc8;
+  font-size:12px;
+}
+.sdm-cursor{width:8px;height:8px;border-radius:50%;background:#d6ff63;box-shadow:0 0 18px rgba(214,255,99,.75);animation:sdmBlink 1.2s infinite}
+.sdm-side-panels{
+  display:grid;
+  gap:14px;
+}
+.sdm-panel{
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;
+  background:rgba(0,0,0,.28);
+  padding:16px;
+}
+.sdm-panel-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:14px;
+}
+.sdm-panel-head h3{font-size:17px;font-weight:400;color:#fff}
+.sdm-panel-head span{font-size:12px;color:#9ca3af}
+.sdm-funnel{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+.sdm-funnel div{
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;
+  background:rgba(255,255,255,.055);
+  padding:12px;
+}
+.sdm-funnel small{display:block;color:#9ca3af;margin-bottom:6px}
+.sdm-funnel strong{font-size:24px;font-weight:400;letter-spacing:-.04em}
+.sdm-section-bars{
+  height:132px;
+  display:flex;
+  align-items:end;
+  gap:10px;
+}
+.sdm-section-bars i{
+  flex:1;
+  height:var(--h);
+  transform-origin:bottom;
+  border-radius:999px 999px 4px 4px;
+  background:linear-gradient(180deg,#d6ff63,#8be8ff);
+  animation:sdmBar 3.4s ease-in-out infinite;
+  animation-delay:var(--d);
+}
+.sdm-checklist{
+  display:grid;
+  gap:10px;
+}
+.sdm-check-row{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:10px;
+  color:#d7dce5;
+  font-size:13px;
+}
+.sdm-check-row svg{
+  width:16px;
+  height:16px;
+  color:#d6ff63;
+}
+.sdm-check-row em{
+  color:#9ca3af;
+  font-size:12px;
+  font-style:normal;
+}
+
+.sdm-curriculum{
+  background:#050505;
+}
+.sdm-module-grid{
+  margin-top:44px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:8px;
+  overflow:hidden;
+}
+.sdm-module{
+  min-height:260px;
+  padding:24px;
+  border-right:1px solid rgba(255,255,255,.11);
+  background:rgba(255,255,255,.035);
+}
+.sdm-module:last-child{border-right:0}
+.sdm-module b{
+  display:block;
+  margin-bottom:54px;
+  color:#8d94a3;
+  font-weight:400;
+}
+.sdm-module h3{
+  color:#fff;
+  font-size:24px;
+  line-height:1.05;
+  font-weight:400;
+  letter-spacing:-.035em;
+  margin-bottom:10px;
+}
+.sdm-module p{
+  color:#aab0bd;
+  font-size:15px;
+  line-height:1.58;
+}
+
+.sdm-offer{
+  background:#0b0d12;
+}
+.sdm-offer-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  align-items:stretch;
+  margin-top:44px;
+}
+.sdm-offer-card{
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:8px;
+  background:rgba(255,255,255,.055);
+  padding:26px;
+}
+.sdm-price-card{
+  display:flex;
+  flex-direction:column;
+  min-height:430px;
+  background:#fff;
+  color:#050505;
+}
+.sdm-price-card .sdm-eyebrow{color:#4b5563}
+.sdm-price{
+  margin:26px 0 8px;
+  font-size:64px;
+  line-height:.9;
+  font-weight:400;
+  letter-spacing:-.06em;
+}
+.sdm-price span{
+  color:#6b7280;
+  font-size:16px;
+  letter-spacing:0;
+}
+.sdm-includes{
+  display:grid;
+  gap:12px;
+  margin:26px 0;
+}
+.sdm-includes li{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  color:#111827;
+  font-size:15px;
+  line-height:1.45;
+  list-style:none;
+}
+.sdm-includes svg{width:17px;height:17px;flex:0 0 17px;margin-top:2px;color:#111827}
+.sdm-price-card .sdm-btn{margin-top:auto;background:#050505;color:#fff}
+.sdm-bonus-list{
+  display:grid;
+  gap:14px;
+}
+.sdm-bonus{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:14px;
+  padding:16px;
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:8px;
+  background:rgba(0,0,0,.24);
+}
+.sdm-bonus span{
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  border-radius:8px;
+  color:#050505;
+  background:#d6ff63;
+}
+.sdm-bonus svg{width:18px;height:18px}
+.sdm-bonus h3{
+  color:#fff;
+  font-size:20px;
+  font-weight:400;
+  letter-spacing:-.03em;
+  margin-bottom:6px;
+}
+.sdm-bonus p{
+  color:#aab0bd;
+  font-size:14px;
+  line-height:1.55;
+}
+
+.sdm-testimonials{
+  background:#050505;
+}
+.sdm-quote-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-top:44px;
+}
+.sdm-quote{
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:8px;
+  background:rgba(255,255,255,.045);
+  padding:26px;
+}
+.sdm-quote p{
+  color:#fff;
+  font-size:24px;
+  line-height:1.28;
+  letter-spacing:-.035em;
+}
+.sdm-person{
+  margin-top:24px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.sdm-avatar{
+  width:42px;
+  height:42px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:#fff;
+  color:#050505;
+  font-size:13px;
+}
+.sdm-person strong,.sdm-person span{display:block}
+.sdm-person strong{font-weight:400}
+.sdm-person span{margin-top:2px;color:#9ca3af;font-size:13px}
+
+.sdm-faq{
+  background:#0b0d12;
+}
+.sdm-faq-list{
+  width:min(860px,100%);
+  margin:44px auto 0;
+  display:grid;
+  gap:12px;
+}
+.sdm-faq-list details{
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;
+  background:rgba(255,255,255,.045);
+  padding:20px 22px;
+}
+.sdm-faq-list summary{
+  cursor:pointer;
+  color:#fff;
+  font-size:20px;
+  font-weight:400;
+  letter-spacing:-.03em;
+}
+.sdm-faq-list p{
+  margin-top:12px;
+  color:#aab0bd;
+  font-size:15px;
+  line-height:1.65;
+}
+
+.sdm-final{
+  background:#050505;
+  color:#fff;
+  text-align:center;
+}
+.sdm-final-box{
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;
+  background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.035));
+  padding:clamp(34px,6vw,72px) 24px;
+}
+.sdm-final-actions{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:14px;
+  margin-top:30px;
+}
+.sdm-footer{
+  border-top:1px solid rgba(255,255,255,.08);
+  background:#050505;
+  color:#9ca3af;
+  padding:28px clamp(20px,5vw,72px);
+}
+.sdm-footer-grid{
+  width:min(1180px,100%);
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+.sdm-footer strong{color:#fff;font-weight:400}
+.sdm-footer-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:18px;
+  color:#d1d5db;
+  font-size:14px;
+}
+
+@media(max-width:1020px){
+  .sdm-problem-grid,.sdm-interface-grid,.sdm-lab-grid,.sdm-offer-grid,.sdm-quote-grid{grid-template-columns:1fr}
+  .sdm-module-grid{grid-template-columns:1fr 1fr}
+  .sdm-module:nth-child(2){border-right:0}
+  .sdm-module:nth-child(1),.sdm-module:nth-child(2){border-bottom:1px solid rgba(255,255,255,.11)}
+}
+@media(max-width:768px){
+  .sdm-section{padding:76px 18px}
+  .sdm-nav-wrap{padding:22px 24px 0}
+  .sdm-nav{
+    min-height:58px;
+    padding:0;
+    border-radius:0;
+    background:transparent;
+    -webkit-backdrop-filter:none;
+    backdrop-filter:none;
+    box-shadow:none;
+    overflow:visible;
+  }
+  .sdm-nav.liquid-glass::before{display:none}
+  .sdm-nav-links,.sdm-nav-cta{display:none}
+  .sdm-brand{font-size:24px;text-shadow:0 1px 18px rgba(0,0,0,.44)}
+  .sdm-mobile-menu{
+    width:58px;
+    height:58px;
+    display:grid;
+    place-items:center;
+    gap:5px;
+    border:1px solid rgba(255,255,255,.16);
+    border-radius:50%;
+    background:rgba(255,255,255,.1);
+    color:#fff;
+    box-shadow:0 18px 42px rgba(0,0,0,.26),inset 0 0 0 1px rgba(255,255,255,.04);
+  }
+  .sdm-mobile-menu span{
+    width:22px;
+    height:2.5px;
+    border-radius:999px;
+    background:currentColor;
+  }
+  .sdm-hero-center{padding:118px 18px 142px}
+  .sdm-animated-heading{font-size:clamp(36px,11.4vw,54px)}
+  .sdm-hero-actions{width:100%}
+  .sdm-hero-actions .sdm-btn{width:100%}
+  .sdm-bottom-pill-wrap{padding-left:18px;padding-right:18px;padding-bottom:32px}
+  .sdm-bottom-pill{width:100%;text-align:center}
+  .sdm-builder-panel{min-height:360px}
+  .sdm-module-grid{grid-template-columns:1fr}
+  .sdm-module{border-right:0;border-bottom:1px solid rgba(255,255,255,.11)}
+  .sdm-module:last-child{border-bottom:0}
+  .sdm-footer-grid{align-items:flex-start;flex-direction:column}
+}
+@media(max-width:520px){
+  .sdm-title{font-size:clamp(34px,12vw,48px)}
+  .sdm-price{font-size:52px}
+  .sdm-lab{padding:12px}
+  .sdm-funnel{grid-template-columns:1fr}
+  .sdm-btn{width:100%}
+}
+</style>
+</head>
+<body data-synthly-template-mobile-nav="native">
+  <div class="sdm-page">
+    
+<section class="sdm-hero" id="mulai">
+  <video class="sdm-hero-video" autoplay loop muted playsinline aria-hidden="true">
+    <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260423_084718_72a17915-4964-4059-afcd-22d59399b72e.mp4" type="video/mp4" data-edit="hero-video-source">
+  </video>
+  <div class="sdm-hero-content">
+    
+<div class="sdm-nav-wrap">
+  <nav class="sdm-nav liquid-glass">
+    <a class="sdm-brand" href="#mulai" data-edit="brand-name">Synthly</a>
+    <div class="sdm-nav-links">
+      <a href="#cerita" data-edit="nav-link">Cerita</a>
+      <a href="#materi" data-edit="nav-link">Materi</a>
+      <a href="#benefit" data-edit="nav-link">Benefit</a>
+      <a href="#harga" data-edit="nav-link">Daftar</a>
+    </div>
+    <a class="sdm-nav-cta" href="#daftar" data-edit="nav-cta">Daftar Webinar</a>
+    <button class="sdm-mobile-menu" type="button" aria-label="Buka menu"><span></span><span></span><span></span></button>
+  </nav>
+</div>
+
+    <div class="sdm-hero-center">
+      <div class="sdm-hero-inner">
+        <h1 class="sdm-animated-heading" data-delay="200" data-char-delay="30" data-edit="headline">Bikin Landing Page
+Tanpa Coding.</h1>
+        <div class="sdm-fade" data-delay="800" data-duration="1000">
+          <p class="sdm-hero-sub" data-edit="subheadline">Webinar praktis untuk bikin landing page gelap, premium, dan siap closing. Mulai dari struktur sales page, visual hero, sampai CTA yang bikin orang klik.</p>
+        </div>
+        <div class="sdm-fade" data-delay="1200" data-duration="1000">
+          <div class="sdm-hero-actions">
+            <a class="sdm-btn" href="#daftar" data-edit="primary-cta-link"><span data-edit="primary-cta-text">Daftar Sekarang</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <a class="sdm-btn sdm-btn-glass liquid-glass" href="#materi" data-edit="secondary-cta-link"><span data-edit="secondary-cta-text">Lihat Materi</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sdm-bottom-pill-wrap">
+      <div class="sdm-fade" data-delay="1400" data-duration="1000">
+        <div class="sdm-bottom-pill liquid-glass"><p>Riset. Desain. Publish.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+    
+
+<div class="sdm-proof" aria-label="Benefit webinar">
+  <div class="sdm-proof-track">
+    <span>Tanpa coding</span><span>Layout siap jualan</span><span>Prompt copywriting</span><span>Hero premium</span><span>CTA yang jelas</span><span>Checklist publish</span>
+    <span>Tanpa coding</span><span>Layout siap jualan</span><span>Prompt copywriting</span><span>Hero premium</span><span>CTA yang jelas</span><span>Checklist publish</span>
+  </div>
+</div>
+
+
+<section class="sdm-section sdm-problem" id="cerita">
+  <div class="sdm-container sdm-problem-grid">
+    <div>
+      <div class="sdm-eyebrow">Kenapa webinar ini penting</div>
+      <h2 class="sdm-title">Banyak landing page gagal bukan karena produknya jelek.</h2>
+      <p class="sdm-copy">Masalahnya sering ada di struktur: headline kurang tajam, benefit terlalu abstrak, visual tidak mendukung offer, dan CTA tidak terasa mendesak.</p>
+    </div>
+    <div class="sdm-problem-list">
+      <article class="sdm-problem-card"><b>01</b><div><h3>Halaman terlihat bagus, tapi tidak menjual</h3><p>Kamu akan belajar mengurutkan section supaya pengunjung paham masalah, percaya solusi, lalu siap daftar.</p></div></article>
+      <article class="sdm-problem-card"><b>02</b><div><h3>Terlalu lama karena mikir desain dari nol</h3><p>Di webinar ini alurnya dibuat praktis: pilih struktur, tulis copy, susun visual, lalu publish dengan cepat.</p></div></article>
+      <article class="sdm-problem-card"><b>03</b><div><h3>Takut coding dan teknis ribet</h3><p>Materinya fokus pada workflow tanpa coding, jadi kamu bisa bikin LP sendiri tanpa nunggu developer.</p></div></article>
+    </div>
+  </div>
+</section>
+
+
+<section class="sdm-section sdm-interface" id="benefit">
+  <div class="sdm-container sdm-interface-grid">
+    <div>
+      <div class="sdm-eyebrow">Visual benefit</div>
+      <h2 class="sdm-title">Lihat cara LP dibangun seperti ruang kontrol campaign.</h2>
+      <p class="sdm-copy">Fake interface ini menggambarkan benefit yang peserta dapat: prompt offer, susunan section, skor konversi, dan checklist sebelum publish.</p>
+      <div class="sdm-chip-row">
+        <span>Offer prompt</span>
+        <span>Section builder</span>
+        <span>Conversion score</span>
+        <span>Publish checklist</span>
+      </div>
+    </div>
+    <div class="sdm-lab" aria-label="Ilustrasi dashboard webinar landing page">
+      <div class="sdm-lab-top"><span class="sdm-dot"></span><span class="sdm-dot y"></span><span class="sdm-dot g"></span><div class="sdm-url">synthly.local/no-code-lp-lab</div></div>
+      <div class="sdm-lab-grid">
+        <div class="sdm-builder-panel">
+          <div class="sdm-scanline"></div>
+          <article class="sdm-builder-card"><h3>Hero dark mode</h3><p>Headline, subheadline, proof, dan CTA dibangun dari satu offer utama.</p></article>
+          <article class="sdm-builder-card"><h3>Benefit interface</h3><p>Visual dibuat untuk menjelaskan akses, output, dan hasil yang peserta dapat.</p></article>
+          <article class="sdm-builder-card"><h3>CTA booking</h3><p>Tombol diarahkan ke daftar webinar, WhatsApp, atau form lead.</p></article>
+          <div class="sdm-prompt-bar"><strong>Prompt aktif</strong><div class="sdm-prompt-line"><span>Buat LP webinar tanpa coding untuk pemula yang mau closing cepat</span><i class="sdm-cursor"></i></div></div>
+        </div>
+        <div class="sdm-side-panels">
+          <div class="sdm-panel">
+            <div class="sdm-panel-head"><h3>Conversion Score</h3><span>Live</span></div>
+            <div class="sdm-funnel"><div><small>Clarity</small><strong>92</strong></div><div><small>Urgency</small><strong>84</strong></div><div><small>Trust</small><strong>89</strong></div></div>
+          </div>
+          <div class="sdm-panel">
+            <div class="sdm-panel-head"><h3>Section Flow</h3><span>7 blocks</span></div>
+            <div class="sdm-section-bars"><i style="--h:44%;--d:0s"></i><i style="--h:78%;--d:.2s"></i><i style="--h:58%;--d:.4s"></i><i style="--h:92%;--d:.1s"></i><i style="--h:66%;--d:.3s"></i></div>
+          </div>
+          <div class="sdm-panel">
+            <div class="sdm-panel-head"><h3>Publish Checklist</h3><span>Siap</span></div>
+            <div class="sdm-checklist">
+              <div class="sdm-check-row"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Copy CTA jelas</span><em>done</em></div>
+              <div class="sdm-check-row"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Benefit visual aktif</span><em>done</em></div>
+              <div class="sdm-check-row"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Mobile spacing aman</span><em>done</em></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="sdm-section sdm-curriculum" id="materi">
+  <div class="sdm-container">
+    <div class="sdm-center">
+      <div class="sdm-eyebrow">Materi webinar</div>
+      <h2 class="sdm-title">Dari ide mentah sampai LP siap dipakai jualan.</h2>
+      <p class="sdm-copy">Setiap sesi dirancang singkat, praktis, dan langsung bisa ditiru untuk produk digital, jasa, webinar, kelas, atau offer konsultasi.</p>
+    </div>
+    <div class="sdm-module-grid">
+      <article class="sdm-module"><b>01</b><h3>Offer yang mudah dipahami</h3><p>Ubah ide produk menjadi headline, promise, dan positioning yang enak dibaca.</p></article>
+      <article class="sdm-module"><b>02</b><h3>Struktur landing page</h3><p>Susun hero, problem, benefit, proof, harga, FAQ, dan CTA supaya alurnya natural.</p></article>
+      <article class="sdm-module"><b>03</b><h3>Visual premium tanpa ribet</h3><p>Gunakan dark mode, liquid glass, fake interface, dan spacing yang terlihat mahal.</p></article>
+      <article class="sdm-module"><b>04</b><h3>Publish dan optimasi CTA</h3><p>Cek mobile, rapikan form, dan buat CTA yang jelas untuk daftar atau konsultasi.</p></article>
+    </div>
+  </div>
+</section>
+
+
+<section class="sdm-section sdm-offer" id="harga">
+  <div class="sdm-container">
+    <div class="sdm-center">
+      <div class="sdm-eyebrow">Akses webinar</div>
+      <h2 class="sdm-title">Sekali ikut, kamu bawa pulang sistem bikin LP.</h2>
+      <p class="sdm-copy">Bukan sekadar nonton teori. Kamu dapat alur, prompt, checklist, dan contoh section yang bisa langsung dipakai ulang.</p>
+    </div>
+    <div class="sdm-offer-grid">
+      <article class="sdm-offer-card sdm-price-card">
+        <div class="sdm-eyebrow">Early access</div>
+        <h3 class="sdm-title" style="color:#050505;font-size:42px">Tiket Webinar</h3>
+        <div class="sdm-price">Rp97rb <span>/ peserta</span></div>
+        <ul class="sdm-includes">
+          <li><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg> Live webinar 90 menit</li>
+          <li><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg> Template struktur landing page</li>
+          <li><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg> Prompt copywriting offer dan CTA</li>
+          <li><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg> Rekaman dan replay 7 hari</li>
+        </ul>
+        <a class="sdm-btn" href="#daftar">Ambil kursi webinar <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </article>
+      <article class="sdm-offer-card">
+        <div class="sdm-eyebrow">Bonus peserta</div>
+        <div class="sdm-bonus-list">
+          <div class="sdm-bonus"><span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 3 19 13l-7 1-3 6L5 3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span><div><h3>Prompt LP tanpa coding</h3><p>Template prompt untuk membuat hero, benefit, pricing, FAQ, dan final CTA.</p></div></div>
+          <div class="sdm-bonus"><span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m12 3 1.7 5.1L19 10l-5.3 1.9L12 17l-1.7-5.1L5 10l5.3-1.9L12 3ZM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span><div><h3>Checklist visual premium</h3><p>Panduan spacing, dark mode, glass effect, dan fake interface agar halaman tidak terlihat template biasa.</p></div></div>
+          <div class="sdm-bonus"><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7L8 5Z"/></svg></span><div><h3>Replay 7 hari</h3><p>Tonton ulang bagian penting saat kamu mulai membangun landing page sendiri.</p></div></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+<section class="sdm-section sdm-testimonials">
+  <div class="sdm-container">
+    <div class="sdm-eyebrow">Hasil peserta</div>
+    <h2 class="sdm-title">Yang dicari bukan cuma halaman cantik, tapi halaman yang jalan.</h2>
+    <div class="sdm-quote-grid">
+      <article class="sdm-quote"><p>"Akhirnya ngerti urutan section yang bikin orang mau klik. Dulu cuma mikir desain, sekarang mikir offer dulu."</p><div class="sdm-person"><span class="sdm-avatar">RA</span><div><strong>Raka Aditya</strong><span>Founder kelas online</span></div></div></article>
+      <article class="sdm-quote"><p>"Bagian fake interface dan CTA paling ngebuka. Landing page jasa saya jadi terlihat lebih premium tanpa coding."</p><div class="sdm-person"><span class="sdm-avatar">NM</span><div><strong>Nina Maharani</strong><span>Owner jasa desain</span></div></div></article>
+    </div>
+  </div>
+</section>
+
+
+<section class="sdm-section sdm-faq" id="faq">
+  <div class="sdm-container sdm-center">
+    <div class="sdm-eyebrow">FAQ</div>
+    <h2 class="sdm-title">Yang sering ditanyakan.</h2>
+    <div class="sdm-faq-list">
+      <details open><summary>Apakah harus bisa coding?</summary><p>Tidak. Webinar ini memang dibuat untuk pemilik bisnis, creator, dan freelancer yang ingin bikin landing page tanpa nulis kode.</p></details>
+      <details><summary>Apakah cocok untuk pemula?</summary><p>Cocok. Materinya dimulai dari struktur offer, baru lanjut ke visual, section, CTA, dan publish checklist.</p></details>
+      <details><summary>Apakah dapat rekaman?</summary><p>Ya. Peserta mendapat replay 7 hari agar bisa mengulang bagian yang ingin dipraktikkan.</p></details>
+      <details><summary>Apakah bisa dipakai untuk jasa dan produk digital?</summary><p>Bisa. Struktur yang diajarkan fleksibel untuk webinar, jasa, konsultasi, produk digital, kelas, dan lead magnet.</p></details>
+    </div>
+  </div>
+</section>
+
+
+<section class="sdm-section sdm-final" id="daftar">
+  <div class="sdm-container">
+    <div class="sdm-final-box">
+      <div class="sdm-eyebrow">Mulai bikin LP tanpa coding</div>
+      <h2 class="sdm-title" style="margin-left:auto;margin-right:auto">Ambil kursi webinar sebelum slot praktik ditutup.</h2>
+      <p class="sdm-copy" style="margin-left:auto;margin-right:auto">Masuk ke sesi live, ikuti alurnya, lalu pulang dengan struktur landing page yang bisa kamu pakai untuk jualan.</p>
+      <div class="sdm-final-actions">
+        <a class="sdm-btn" href="#harga">Daftar Sekarang <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="sdm-btn sdm-btn-glass liquid-glass" href="#materi">Cek Materi</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<footer class="sdm-footer">
+  <div class="sdm-footer-grid">
+    <div><strong>Synthly</strong><br>Webinar bikin landing page tanpa coding, dark mode, dan siap closing.</div>
+    <div class="sdm-footer-links"><a href="#materi">Materi</a><a href="#benefit">Benefit</a><a href="#harga">Harga</a><a href="#daftar">Daftar</a></div>
+  </div>
+</footer>
+
+
+  </div>
+  
+<script>
+(function(){
+  function initHeading(root){
+    var heading = root.querySelector('.sdm-animated-heading');
+    if(!heading || heading.dataset.sdmReady) return;
+    heading.dataset.sdmReady = 'true';
+    var raw = (heading.textContent || '').replace(/\r/g,'').trim();
+    var delay = Number(heading.getAttribute('data-delay') || 200);
+    var charDelay = Number(heading.getAttribute('data-char-delay') || 30);
+    var lines = raw.split('\n').map(function(line){ return line.trim(); }).filter(Boolean);
+    heading.setAttribute('aria-label', raw.replace(/\s+/g,' '));
+    heading.innerHTML = '';
+    var running = 0;
+    lines.forEach(function(line){
+      var lineEl = document.createElement('div');
+      lineEl.className = 'sdm-line';
+      line.split(/\s+/).filter(Boolean).forEach(function(word, wordIndex){
+        if(wordIndex > 0){
+          var space = document.createElement('span');
+          space.className = 'sdm-space';
+          space.setAttribute('aria-hidden','true');
+          space.textContent = '\u00A0';
+          lineEl.appendChild(space);
+          running += 1;
+        }
+        var wordEl = document.createElement('span');
+        wordEl.className = 'sdm-word';
+        Array.from(word).forEach(function(char){
+          var span = document.createElement('span');
+          span.className = 'sdm-char';
+          span.textContent = char;
+          span.style.transitionDelay = (delay + running * charDelay) + 'ms';
+          running += 1;
+          wordEl.appendChild(span);
+        });
+        lineEl.appendChild(wordEl);
+      });
+      heading.appendChild(lineEl);
+    });
+    window.setTimeout(function(){ heading.classList.add('is-visible'); }, 20);
+  }
+  function initFade(root){
+    root.querySelectorAll('.sdm-fade').forEach(function(el){
+      var delay = Number(el.getAttribute('data-delay') || 0);
+      var duration = Number(el.getAttribute('data-duration') || 800);
+      el.style.setProperty('--duration', duration + 'ms');
+      window.setTimeout(function(){ el.classList.add('is-visible'); }, delay);
+    });
+  }
+  document.querySelectorAll('.sdm-page').forEach(function(root){
+    initHeading(root);
+    initFade(root);
+  });
+})();
+</script>
+
+  <style>
+.smn,.smn *{box-sizing:border-box}
+.smn{position:fixed;top:0;right:0;z-index:2147483600;font-family:inherit}
+@media (min-width:768px){.smn{display:none!important}}
+.smn-btn{position:fixed;top:14px;right:14px;width:46px;height:46px;display:grid;place-items:center;border-radius:999px;cursor:pointer;border:1px solid var(--smn-bd);background:var(--smn-bg);color:var(--smn-fg);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 8px 26px rgba(0,0,0,.3),inset 0 0 0 1px rgba(255,255,255,.06);padding:0;transition:transform .15s ease}
+.smn-btn:active{transform:scale(.92)}
+.smn-btn svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.smn-ov{position:fixed;inset:0;display:none;flex-direction:column;justify-content:center;padding:84px 26px 44px;background:var(--smn-panel);-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px)}
+.smn-ov.is-open{display:flex}
+.smn-x{position:absolute;top:14px;right:14px;width:46px;height:46px;display:grid;place-items:center;border-radius:999px;cursor:pointer;border:1px solid var(--smn-bd);background:var(--smn-bg);color:var(--smn-fg);padding:0}
+.smn-x svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.smn-links{display:flex;flex-direction:column;width:100%;max-width:520px;margin:0 auto}
+.smn-links a{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px 4px;font-size:21px;font-weight:650;letter-spacing:-.01em;color:var(--smn-link);text-decoration:none;border-bottom:1px solid var(--smn-line);opacity:0;transform:translateY(10px);animation:smn-in .42s cubic-bezier(.22,1,.36,1) forwards}
+.smn-links a svg{width:17px;height:17px;flex:0 0 auto;opacity:.45;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.smn-cta{margin-top:26px;justify-content:center!important;border-bottom:0!important;border-radius:14px;padding:18px 22px!important;background:var(--smn-accent)!important;color:var(--smn-accentfg)!important;font-weight:800!important;box-shadow:0 14px 32px rgba(0,0,0,.26)}
+.smn-cta svg{display:none}
+@keyframes smn-in{to{opacity:1;transform:none}}
+@media (max-width:767px){.sdm-mobile-menu{display:none!important}}
+</style>
+<script>(function(){
+  if(window.__smnInit)return; window.__smnInit=1;
+  var CFG={"linksFrom":".sdm-nav-links a","ctaFrom":".sdm-nav-cta","links":[{"label":"Cerita","href":"#cerita"},{"label":"Materi","href":"#materi"},{"label":"Benefit","href":"#benefit"},{"label":"Daftar","href":"#harga"}],"cta":{"label":"Daftar Webinar","href":"#daftar"},"vars":"--smn-bd:rgba(255,255,255,.26);--smn-bg:rgba(16,18,24,.64);--smn-fg:#ffffff;--smn-panel:rgba(8,10,14,.95);--smn-link:#ffffff;--smn-line:rgba(255,255,255,.10);--smn-accent:#ffffff;--smn-accentfg:#050505"};
+  var NS='http://www.w3.org/2000/svg';
+  function svg(paths){
+    var s=document.createElementNS(NS,'svg');s.setAttribute('viewBox','0 0 24 24');s.setAttribute('aria-hidden','true');
+    paths.forEach(function(d){var p=document.createElementNS(NS,'path');p.setAttribute('d',d);s.appendChild(p);});
+    return s;
+  }
+  function readLinks(){
+    var out=[];
+    if(CFG.linksFrom){
+      try{
+        var els=document.querySelectorAll(CFG.linksFrom);
+        for(var i=0;i<els.length;i++){
+          var t=(els[i].textContent||'').replace(/\s+/g,' ').trim();
+          if(!t)continue;
+          var h=els[i].getAttribute&&els[i].getAttribute('href')||'#';
+          if(!h||h.indexOf('javascript')===0)h='#';
+          out.push({label:t,href:h});
+        }
+      }catch(e){}
+    }
+    if(!out.length&&CFG.links&&CFG.links.length)out=CFG.links;
+    return out;
+  }
+  function readCta(){
+    if(CFG.ctaFrom){
+      try{
+        var c=document.querySelector(CFG.ctaFrom);
+        if(c){var t=(c.textContent||'').replace(/\s+/g,' ').trim();var h=c.getAttribute&&c.getAttribute('href')||'#';if(!h||h.indexOf('javascript')===0)h='#';if(t)return{label:t,href:h};}
+      }catch(e){}
+    }
+    return CFG.cta||null;
+  }
+  var root,btn,ov,linkWrap;
+  function build(){
+    root=document.createElement('div');
+    root.className='smn';root.setAttribute('data-smn-root','');root.setAttribute('data-synthly-ignore','');
+    root.setAttribute('style',CFG.vars);
+    btn=document.createElement('button');
+    btn.type='button';btn.className='smn-btn';btn.setAttribute('aria-label','Buka menu');btn.setAttribute('aria-expanded','false');
+    btn.appendChild(svg(['M4 7h16M4 12h16M4 17h16']));
+    ov=document.createElement('nav');ov.className='smn-ov';ov.setAttribute('aria-label','Navigasi');
+    var x=document.createElement('button');x.type='button';x.className='smn-x';x.setAttribute('aria-label','Tutup menu');
+    x.appendChild(svg(['M6 6l12 12M18 6L6 18']));
+    linkWrap=document.createElement('div');linkWrap.className='smn-links';
+    ov.appendChild(x);ov.appendChild(linkWrap);
+    root.appendChild(btn);root.appendChild(ov);
+    (document.body||document.documentElement).appendChild(root);
+    btn.addEventListener('click',function(){set(!ov.classList.contains('is-open'));});
+    x.addEventListener('click',function(){set(false);});
+    ov.addEventListener('click',function(e){if(e.target===ov||(e.target.closest&&e.target.closest('a')))set(false);});
+  }
+  function populate(){
+    linkWrap.innerHTML='';
+    var links=readLinks(),cta=readCta();
+    links.forEach(function(l,i){
+      var a=document.createElement('a');a.href=l.href;a.textContent=l.label;
+      a.style.animationDelay=(0.04*i+0.05).toFixed(2)+'s';
+      a.appendChild(svg(['M9 6l6 6-6 6']));
+      linkWrap.appendChild(a);
+    });
+    if(cta){
+      var c=document.createElement('a');c.href=cta.href;c.className='smn-cta';c.textContent=cta.label;
+      c.style.animationDelay=(0.04*links.length+0.08).toFixed(2)+'s';
+      linkWrap.appendChild(c);
+    }
+  }
+  function set(s){
+    if(s)populate();
+    ov.classList.toggle('is-open',s);
+    btn.setAttribute('aria-expanded',s?'true':'false');
+    try{document.documentElement.style.overflow=s?'hidden':'';if(document.body)document.body.style.overflow=s?'hidden':'';}catch(e){}
+  }
+  function init(){ if(!document.body){return setTimeout(init,30);} build(); }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();</script>
+</body>
+</html>
