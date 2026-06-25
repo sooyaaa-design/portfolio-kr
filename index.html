@@ -1022,6 +1022,13 @@
     @keyframes html-spin { to { transform: rotate(360deg); } }
     .html-preview-loading .spinner { animation: html-spin 0.8s linear infinite; }
 
+    /* Utility: sembunyikan elemen yang diberi class .hidden.
+       Penting: logika JS media viewer (video, cover YouTube, iframe embed,
+       preview HTML, dan gambar desain) bergantung penuh pada class ini untuk
+       beralih antar-media. Tanpa aturan ini semua layer absolute saling
+       menumpuk sehingga cover YouTube (z-index:10) menutupi video & preview. */
+    .hidden { display: none !important; }
+
     /* Modal Video Player */
     #video-modal.hidden { display: none !important; }
     #video-modal {
