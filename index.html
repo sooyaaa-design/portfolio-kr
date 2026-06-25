@@ -68,7 +68,11 @@
     .aura-content {
       position: relative;
       z-index: 10;
+      /* Clearance so the fixed floating bottom toolbar never overlaps the footer */
+      padding-bottom: 96px;
     }
+    /* Offset anchored sections so the fixed navbar doesn't cover their headings */
+    section[id] { scroll-margin-top: 84px; }
     .aura-container {
       width: min(100%, 72rem);
       margin: 0 auto;
@@ -133,8 +137,21 @@
       pointer-events: none;
     }
 
+    /* Floating glassmorphism navbar that stays fixed while scrolling */
+    .aura-floating-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      z-index: 1000;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
     .aura-nav {
-      padding: 24px 0;
+      padding: 14px 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -145,6 +162,13 @@
       height: 32px;
       color: #fff;
       flex: 0 0 auto;
+    }
+    .aura-logo-img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+      flex: 0 0 auto;
+      display: block;
     }
     .aura-nav-links {
       display: none;
@@ -241,7 +265,7 @@
     .aura-apple-button:hover .chev { transform: translateX(1px); }
 
     .aura-hero {
-      padding-top: 64px;
+      padding-top: 96px;
       padding-bottom: 80px;
       text-align: center;
       display: flex;
@@ -280,12 +304,27 @@
       gap: 12px;
     }
 
+    /* Sticky floating quick-access toolbar pinned to the bottom of the viewport */
+    @keyframes aura-menubar-in {
+      from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
     .aura-menu-bar {
-      height: 40px;
-      background: rgba(0,0,0,0.4);
-      backdrop-filter: blur(12px);
-      border-top: 1px solid rgba(255,255,255,0.08);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      position: fixed;
+      left: 50%;
+      bottom: 16px;
+      transform: translateX(-50%);
+      width: min(calc(100% - 32px), 72rem);
+      height: 44px;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      box-shadow: 0 14px 44px rgba(0,0,0,0.5);
+      z-index: 900;
+      opacity: 0;
+      animation: aura-menubar-in 0.6s ease-out 0.9s forwards;
     }
     .aura-menu-inner {
       height: 100%;
@@ -709,6 +748,13 @@
     .aura-triage-item {
       border-radius: 10px;
       padding: 12px;
+      /* These 4 service cards are liquid-glass nested inside a liquid-glass
+         parent. Nested backdrop-filter renders as an opaque white box in
+         Chromium, which made the cards appear blank/white. Use an explicit
+         translucent tint (and drop the nested blur) to restore the glass look. */
+      background: rgba(255,255,255,0.05);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
     }
     .aura-triage-head {
       display: flex;
@@ -1105,6 +1151,10 @@
     }
     @media (max-width: 720px) {
       .aura-container { padding: 0 18px; }
+      /* Extra bottom clearance on mobile so the floating toolbar never
+         overlaps the final CTA / footer content (>= 80px requested) */
+      .aura-content { padding-bottom: 104px; }
+      .aura-menu-bar { bottom: 12px; height: 42px; }
       .aura-menu-left { gap: 10px; }
       .aura-menu-left span:nth-of-type(n+4) { display: none; }
       .aura-menu-right span { display: none; }
@@ -1156,14 +1206,13 @@
     <div class="aura-guide aura-guide-right"></div>
 
     <div class="aura-content">
-      <header class="aura-container">
+      <header class="aura-floating-header" data-aura-header>
+        <div class="aura-container">
         <nav class="aura-nav aura-anim-down">
           <a href="#" aria-label="Synthly Studio">
-            <svg class="aura-logo-mark" viewBox="0 0 256 256" aria-hidden="true">
-              <path fill="currentColor" d="M 0 128 C 70.692 128 128 185.308 128 256 L 64 256 C 64 220.654 35.346 192 0 192 Z M 256 192 C 220.654 192 192 220.654 192 256 L 128 256 C 128 185.308 185.308 128 256 128 Z M 128 0 C 128 70.692 70.692 128 0 128 L 0 64 C 35.346 64 64 35.346 64 0 Z M 192 0 C 192 35.346 220.654 64 256 64 L 256 128 C 185.308 128 128 70.692 128 0 Z" />
-            </svg>
+            <img src="logo_kr.png" alt="Synthly Studio" class="aura-logo-img" />
           </a>
-          
+
           <!-- Menu Navigasi Bilingual -->
           <div class="aura-nav-links" aria-label="Navigasi utama">
             <a href="#about" style="--d:0.1s" id="nav-about">About</a>
@@ -1188,7 +1237,8 @@
             </button>
           </div>
         </nav>
-        
+        </div>
+
         <div class="aura-mobile-panel" data-aura-mobile-panel>
           <a href="#about" id="mob-about">About</a>
           <a href="#services" id="mob-services">Services</a>
@@ -1214,7 +1264,7 @@
         </section>
 
         <!-- macOS-style Menubar -->
-        <section class="aura-menu-bar aura-anim-down" style="--d:0.9s" aria-label="Bilah menu macOS">
+        <section class="aura-menu-bar" aria-label="Quick-access toolbar">
           <div class="aura-container aura-menu-inner">
             <div class="aura-menu-left">
               <svg class="aura-ico" style="stroke-width:3; color:#0071e3;" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m10 15 5-3-5-3v6Z"/></svg>
