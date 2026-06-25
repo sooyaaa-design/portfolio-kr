@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Synthly Estate - Hunian Premium</title>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;500;700;900&display=swap');
+
+/* ── RESET ── */
+.zr-page{font-family:'Lato',sans-serif;background:#F8F8F8;color:#141414;overflow-x:hidden;}
+.zr-page *{box-sizing:border-box;min-width:0;}
+.zr-page a{color:inherit;text-decoration:none;}
+.zr-page img,.zr-page video{display:block;max-width:100%;}
+.zr-page button{font-family:'Lato',sans-serif;}
+.zr-page .zr-hero-btn,
+.zr-page .zr-hero-btn:link,
+.zr-page .zr-hero-btn:visited,
+.zr-page .zr-hero-btn:hover,
+.zr-page .zr-hero-btn:active,
+.zr-page .zr-mb-cta,
+.zr-page .zr-mb-cta:link,
+.zr-page .zr-mb-cta:visited,
+.zr-page .zr-mb-cta:hover,
+.zr-page .zr-mb-cta:active{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
+
+/* ── NAVBAR ── */
+.zr-nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 48px;
+  background:rgba(248,248,248,0.88);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  box-shadow:0 1px 0 rgba(20,20,20,0.06);
+  transition:background .3s,padding .3s,box-shadow .3s;
+}
+.zr-nav.zr-scrolled{
+  background:rgba(248,248,248,0.88);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  padding:14px 48px;
+  box-shadow:0 1px 0 rgba(20,20,20,0.06);
+}
+.zr-logo{
+  display:flex;flex-direction:column;line-height:0.85;
+  font-size:16px;font-weight:900;letter-spacing:-0.04em;color:#141414;
+  user-select:none;flex-shrink:0;
+}
+.zr-nav-links{
+  display:flex;align-items:center;gap:26px;
+  position:absolute;left:50%;transform:translateX(-50%);
+}
+.zr-nav-link{
+  display:inline-flex;align-items:center;gap:3px;
+  font-size:13px;font-weight:500;letter-spacing:-0.01em;color:#141414;
+  cursor:pointer;transition:opacity .2s;white-space:nowrap;
+}
+.zr-nav-link:hover{opacity:0.55;}
+.zr-nav-badge{
+  background:#141414;color:#fff;
+  font-size:9px;padding:2px 5px;
+  border-radius:2px;line-height:1;font-weight:700;
+  letter-spacing:0.03em;display:inline-block;vertical-align:middle;
+}
+.zr-nav-action{
+  display:flex;align-items:center;gap:7px;flex-shrink:0;
+  border:1px solid rgba(20,20,20,0.1);background:rgba(255,255,255,0.8);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  padding:10px 20px;
+  font-size:13px;font-weight:500;letter-spacing:-0.01em;
+  cursor:pointer;transition:background .2s;color:#141414;
+}
+.zr-nav-action:hover{background:#fff;}
+.zr-hamburger{
+  display:none;background:none;border:none;cursor:pointer;
+  padding:4px;color:#141414;line-height:0;flex-shrink:0;
+}
+
+/* ── MOBILE MENU ── */
+.zr-mb-overlay{
+  position:fixed;inset:0;z-index:190;
+  background:rgba(0,0,0,0.28);
+  opacity:0;pointer-events:none;
+  transition:opacity .3s;
+}
+.zr-mb-overlay.zr-open{opacity:1;pointer-events:all;}
+.zr-mb-menu{
+  position:fixed;top:0;right:0;bottom:0;width:272px;z-index:200;
+  background:#fff;padding:64px 28px 36px;
+  display:flex;flex-direction:column;gap:0;
+  transform:translateX(100%);
+  transition:transform .35s cubic-bezier(.4,0,.2,1);
+  box-shadow:-8px 0 40px rgba(0,0,0,0.1);
+}
+.zr-mb-menu.zr-open{transform:translateX(0);}
+.zr-mb-close{
+  position:absolute;top:18px;right:18px;
+  background:none;border:none;cursor:pointer;color:#141414;padding:4px;line-height:0;
+}
+.zr-mb-links{display:flex;flex-direction:column;flex:1;}
+.zr-mb-link{
+  display:flex;align-items:center;gap:8px;
+  padding:15px 0;border-bottom:1px solid rgba(20,20,20,0.06);
+  font-size:15px;font-weight:500;color:#141414;cursor:pointer;
+}
+.zr-mb-link:last-child{border-bottom:none;}
+.zr-mb-cta{
+  margin-top:28px;background:#141414;color:#fff;
+  padding:15px 20px;font-size:13px;font-weight:500;
+  display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;
+  transition:opacity .2s;
+}
+.zr-mb-cta:hover{opacity:0.88;}
+
+/* ── HERO ── */
+.zr-hero{position:relative;height:100svh;min-height:620px;overflow:hidden;}
+.zr-hero-video{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  object-fit:cover;z-index:0;
+}
+.zr-hero-overlay{
+  position:relative;z-index:10;width:100%;height:100%;
+  background:
+    linear-gradient(90deg,rgba(0,0,0,.46) 0%,rgba(0,0,0,.28) 34%,rgba(0,0,0,.1) 62%,rgba(0,0,0,.2) 100%),
+    linear-gradient(180deg,rgba(0,0,0,.06) 0%,rgba(0,0,0,.04) 40%,rgba(0,0,0,.4) 100%);
+  display:flex;flex-direction:column;
+}
+.zr-hero-content{
+  flex:1;display:flex;align-items:flex-end;
+  padding:120px 48px 88px;
+}
+.zr-hero-grid{
+  width:100%;max-width:1280px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(12,1fr);gap:24px;
+  align-items:flex-end;
+}
+.zr-hero-left{grid-column:1/9;}
+.zr-hero-left h1{
+  font-size:clamp(38px,5.5vw,72px);
+  font-weight:500;letter-spacing:-0.04em;line-height:1.05;
+  color:#fff;margin:0 0 36px;
+  text-shadow:0 4px 32px rgba(0,0,0,.7),0 1px 2px rgba(0,0,0,.55);
+}
+.zr-hero-btn{
+  display:inline-flex;align-items:center;width:fit-content;
+  background:#141414;color:#fff!important;
+  border:1px solid rgba(255,255,255,0.14);
+  padding:16px 36px;cursor:pointer;
+  font-size:13px;font-weight:500;font-family:'Lato',sans-serif;
+  letter-spacing:0.08em;text-transform:uppercase;
+  box-shadow:0 18px 44px rgba(0,0,0,0.32),0 0 0 1px rgba(255,255,255,0.08);
+  transition:opacity .2s;
+}
+.zr-hero-btn:hover{opacity:0.85;}
+.zr-hero-right{
+  grid-column:9/13;align-self:flex-end;padding-bottom:4px;
+}
+.zr-hero-right p{
+  color:#fff;font-size:clamp(15px,1.4vw,18px);
+  line-height:1.4;margin:0;font-weight:400;
+  text-shadow:0 3px 22px rgba(0,0,0,.72),0 1px 2px rgba(0,0,0,.55);
+}
+
+/* ── HERO ANIMATIONS ── */
+@keyframes zrFadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+@keyframes zrFadeIn{from{opacity:0;}to{opacity:1;}}
+.zr-h1-anim{opacity:0;animation:zrFadeUp .9s ease .1s forwards;}
+.zr-sub-anim{opacity:0;animation:zrFadeIn .7s ease .4s forwards;}
+.zr-btn-anim{opacity:0;animation:zrFadeIn .7s ease .6s forwards;}
+
+/* ── SCROLL ANIMATIONS ── */
+.zr-fade-up{opacity:0;transform:translateY(28px);transition:opacity .75s ease,transform .75s ease;}
+.zr-fade-in{opacity:0;transition:opacity .75s ease;}
+.zr-fade-up.zr-vis,.zr-fade-in.zr-vis{opacity:1;transform:translateY(0);}
+
+/* ── SECTION SHARED ── */
+.zr-section{padding:100px 48px;}
+.zr-inner{max-width:1280px;margin:0 auto;}
+.zr-sec-header{
+  display:grid;grid-template-columns:repeat(12,1fr);gap:24px;
+  margin-bottom:64px;align-items:flex-start;
+}
+.zr-sec-title{grid-column:1/9;}
+.zr-sec-title h2{
+  font-size:clamp(26px,3.2vw,48px);
+  font-weight:500;letter-spacing:-0.03em;line-height:1.1;color:#141414;margin:0;
+}
+.zr-sec-desc{grid-column:9/13;}
+.zr-sec-desc p{color:#A5A5A5;font-size:14px;line-height:1.65;margin:0;}
+.zr-sec-desc p+p{margin-top:14px;}
+
+/* ── PROPERTIES ── */
+.zr-props-bg{background:#F8F8F8;}
+.zr-props-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.zr-prop-card{
+  background:#fff;overflow:hidden;cursor:pointer;
+  opacity:0;transform:translateY(28px);
+  transition:opacity .7s ease,transform .7s ease;
+}
+.zr-prop-card.zr-vis{opacity:1;transform:translateY(0);}
+.zr-prop-card:nth-child(2){transition-delay:.12s;}
+.zr-prop-card:nth-child(3){transition-delay:.24s;}
+.zr-prop-img{aspect-ratio:1/1;overflow:hidden;}
+.zr-prop-img img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .7s ease;
+}
+.zr-prop-card:hover .zr-prop-img img{transform:scale(1.05);}
+.zr-prop-body{padding:20px;}
+.zr-prop-loc{font-size:11px;font-weight:500;color:#A5A5A5;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:5px;}
+.zr-prop-name{font-size:17px;font-weight:700;color:#141414;margin-bottom:4px;}
+.zr-prop-price{font-size:14px;font-weight:500;color:#141414;margin-bottom:14px;}
+.zr-prop-stats{display:flex;flex-wrap:wrap;gap:10px;}
+.zr-stat{display:inline-flex;align-items:center;gap:4px;}
+.zr-stat svg{color:#A5A5A5;flex-shrink:0;}
+.zr-stat span{font-size:11px;font-weight:500;color:#141414;}
+
+/* ── HOW IT WORKS ── */
+.zr-hiw-bg{background:#F8F8F8;}
+.zr-hiw-body{display:grid;grid-template-columns:4fr 8fr;gap:0;overflow:hidden;}
+.zr-hiw-left{background:#fff;padding:64px 56px;display:flex;flex-direction:column;justify-content:space-between;min-height:500px;}
+.zr-hiw-content h3{font-size:20px;font-weight:700;color:#141414;margin:0 0 12px;}
+.zr-hiw-content p{font-size:14px;color:#A5A5A5;line-height:1.65;margin:0 0 32px;}
+.zr-hiw-consult{
+  display:inline-flex;align-items:center;
+  border:1px solid rgba(20,20,20,0.14);background:transparent;
+  padding:12px 22px;font-size:13px;font-weight:500;
+  color:#141414;cursor:pointer;margin-bottom:52px;
+  transition:background .2s;font-family:'Lato',sans-serif;
+}
+.zr-hiw-consult:hover{background:#f5f5f5;}
+.zr-hiw-nav{display:flex;flex-direction:column;gap:1px;}
+.zr-hiw-nav button{
+  background:none;border:none;text-align:left;
+  padding:10px 0;font-size:13px;font-weight:500;
+  color:#A5A5A5;cursor:pointer;transition:color .2s;
+  font-family:'Lato',sans-serif;border-bottom:1px solid rgba(20,20,20,0.05);
+}
+.zr-hiw-nav button:last-child{border-bottom:none;}
+.zr-hiw-nav button:hover,.zr-hiw-nav button.zr-active{color:#141414;}
+.zr-hiw-right{overflow:hidden;}
+.zr-hiw-right img{width:100%;height:100%;object-fit:cover;display:block;}
+
+/* ── INVESTMENT ── */
+.zr-inv-bg{background:#F8F8F8;}
+.zr-charts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.zr-chart-card{
+  background:#fff;padding:24px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  aspect-ratio:1.8/1;
+}
+.zr-chart-label{
+  font-size:11px;font-weight:500;letter-spacing:0.07em;
+  text-transform:uppercase;color:rgba(20,20,20,.4);margin-bottom:4px;
+}
+.zr-chart-val{
+  font-size:36px;font-weight:500;color:#141414;
+  line-height:1;margin-bottom:16px;
+}
+.zr-chart-bars{height:96px;width:100%;position:relative;}
+.zr-chart-bars svg{position:absolute;inset:0;width:100%;height:100%;}
+
+/* ── MOBILE: 480px ── */
+@media(max-width:480px){
+  /* Nav */
+  .zr-nav{padding:16px 20px;}
+  .zr-nav.zr-scrolled{padding:12px 20px;}
+  .zr-nav-links,.zr-nav-action{display:none;}
+  .zr-hamburger{display:flex;}
+
+  /* Hero */
+  .zr-hero{min-height:100svh;}
+  .zr-hero-overlay{
+    background:
+      linear-gradient(180deg,rgba(0,0,0,.22) 0%,rgba(0,0,0,.12) 34%,rgba(0,0,0,.5) 100%),
+      linear-gradient(90deg,rgba(0,0,0,.38) 0%,rgba(0,0,0,.16) 100%);
+  }
+  .zr-hero-content{padding:90px 20px 56px;}
+  .zr-hero-grid{grid-template-columns:1fr;gap:20px;}
+  .zr-hero-left{grid-column:1/2;}
+  .zr-hero-left h1{font-size:34px;margin-bottom:28px;}
+  .zr-hero-btn{padding:14px 28px;font-size:12px;}
+  .zr-hero-right{grid-column:1/2;padding-bottom:0;}
+  .zr-hero-right p{font-size:15px;}
+
+  /* Sections */
+  .zr-section{padding:64px 20px;}
+  .zr-sec-header{grid-template-columns:1fr;gap:16px;margin-bottom:40px;}
+  .zr-sec-title,.zr-sec-desc{grid-column:1/2;}
+
+  /* Props */
+  .zr-props-grid{grid-template-columns:1fr;gap:16px;}
+  .zr-prop-img{aspect-ratio:4/3;}
+
+  /* HIW */
+  .zr-hiw-body{grid-template-columns:1fr;}
+  .zr-hiw-left{order:2;padding:36px 24px;min-height:auto;}
+  .zr-hiw-right{order:1;aspect-ratio:4/3;}
+  .zr-hiw-consult{margin-bottom:32px;}
+
+  /* Investment */
+  .zr-charts-grid{grid-template-columns:1fr;gap:16px;}
+  .zr-chart-card{aspect-ratio:auto;min-height:200px;}
+  .zr-chart-val{font-size:28px;}
+}
+
+/* ── TABLET: 481–900px ── */
+@media(min-width:481px) and (max-width:900px){
+  .zr-nav{padding:16px 24px;}
+  .zr-nav.zr-scrolled{padding:12px 24px;}
+  .zr-nav-links{display:none;}
+  .zr-hamburger{display:flex;}
+  .zr-nav-action{display:flex;}
+
+  .zr-hero-content{padding:100px 24px 72px;}
+  .zr-hero-grid{grid-template-columns:repeat(8,1fr);}
+  .zr-hero-left{grid-column:1/7;}
+  .zr-hero-right{grid-column:5/9;}
+
+  .zr-section{padding:80px 24px;}
+  .zr-sec-header{grid-template-columns:1fr;gap:16px;}
+  .zr-sec-title,.zr-sec-desc{grid-column:1/2;}
+
+  .zr-props-grid{grid-template-columns:repeat(2,1fr);}
+  .zr-prop-img{aspect-ratio:4/3;}
+
+  .zr-hiw-body{grid-template-columns:1fr;}
+  .zr-hiw-left{order:2;min-height:auto;padding:44px 36px;}
+  .zr-hiw-right{order:1;aspect-ratio:16/9;}
+
+  .zr-charts-grid{grid-template-columns:repeat(2,1fr);}
+  .zr-chart-card{aspect-ratio:16/9;}
+}
+  </style>
+</head>
+<body>
+
+<div class="zr-page" data-synthly-estate-template-mobile-nav style="width:100%;overflow-x:hidden;">
+
+  <!-- ════════════ NAVBAR ════════════ -->
+  <nav class="zr-nav" id="zrNav">
+    <div class="zr-logo" aria-label="Synthly Estate">
+      <span>SYNTHLY</span>
+      <span>ESTATE</span>
+    </div>
+
+    <div class="zr-nav-links">
+      <a class="zr-nav-link" href="#">
+        Properti
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </a>
+      <a class="zr-nav-link" href="#">
+        KPR
+        <span class="zr-nav-badge">BARU</span>
+      </a>
+      <a class="zr-nav-link" href="#">Tentang</a>
+      <a class="zr-nav-link" href="#">
+        Karir
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </a>
+      <a class="zr-nav-link" href="#">Blog</a>
+    </div>
+
+    <a class="zr-nav-action" href="#">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Pasang Iklan
+    </a>
+
+    <button class="zr-hamburger" id="zrHamburger" aria-label="Buka menu">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </nav>
+
+  <!-- Mobile overlay -->
+  <div class="zr-mb-overlay" id="zrOverlay"></div>
+
+  <!-- Mobile menu -->
+  <div class="zr-mb-menu" id="zrMbMenu" aria-hidden="true">
+    <button class="zr-mb-close" id="zrMbClose" aria-label="Tutup menu">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="zr-mb-links">
+      <a class="zr-mb-link" href="#">Properti</a>
+      <a class="zr-mb-link" href="#">KPR <span class="zr-nav-badge" style="margin-left:6px;">BARU</span></a>
+      <a class="zr-mb-link" href="#">Tentang</a>
+      <a class="zr-mb-link" href="#">Karir</a>
+      <a class="zr-mb-link" href="#">Blog</a>
+    </div>
+    <a class="zr-mb-cta" href="#">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Pasang Iklan
+    </a>
+  </div>
+
+  <!-- ════════════ HERO ════════════ -->
+  <section class="zr-hero">
+    <video
+      src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260503_144509_89e2d612-8af2-45c3-90f4-4831bc60715d.mp4"
+      autoplay muted loop playsinline
+      class="zr-hero-video"
+    ></video>
+    <div class="zr-hero-overlay">
+      <div class="zr-hero-content">
+        <div class="zr-hero-grid">
+          <div class="zr-hero-left">
+            <h1 class="zr-h1-anim">Temukan hunian yang benar-benar milikmu</h1>
+            <a href="#" class="zr-hero-btn zr-btn-anim">Konsultasi Gratis</a>
+          </div>
+          <div class="zr-hero-right">
+            <p class="zr-sub-anim">Lebih dari sekadar rumah — temukan tempat di mana hidupmu berkembang, nyaman, dan penuh kemungkinan.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ PROPERTI ════════════ -->
+  <section class="zr-section zr-props-bg">
+    <div class="zr-inner">
+      <div class="zr-sec-header">
+        <div class="zr-sec-title">
+          <h2 class="zr-fade-up">Menuntunmu menuju hunian impian</h2>
+        </div>
+        <div class="zr-sec-desc zr-fade-in">
+          <p>Kami hadirkan keseimbangan desain dan perhatian agar setiap klien tinggal di ruang yang mencerminkan nilainya.</p>
+        </div>
+      </div>
+
+      <div class="zr-props-grid">
+
+        <!-- Kartu 1 -->
+        <div class="zr-prop-card">
+          <div class="zr-prop-img">
+            <img src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260503_145701_de344c15-5eac-4c64-8bd6-19a2811bba4a.png&w=1280&q=85" alt="Aether Heights" loading="lazy" />
+          </div>
+          <div class="zr-prop-body">
+            <div class="zr-prop-loc">AS / California / Malibu</div>
+            <div class="zr-prop-name">Aether Heights</div>
+            <div class="zr-prop-price">Rp 5,2 Miliar</div>
+            <div class="zr-prop-stats">
+              <span class="zr-stat">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/></svg>
+                <span>300 m²</span>
+              </span>
+              <span class="zr-stat">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                <span>1 Lantai</span>
+              </span>
+              <span class="zr-stat">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>
+                <span>6 Kamar</span>
+              </span>
+              <span class="zr-stat">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-1-.5C4.683 3 4 3.683 4 4.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/><line x1="10" x2="8" y1="5" y2="7"/><line x1="2" x2="22" y1="12" y2="12"/><line x1="7" x2="7" y1="19" y2="21"/><line x1="17" x2="17" y1="19" y2="21"/></svg>
+                <span>2 KM Mandi</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kartu 2 -->
+        <div class="zr-prop-card">
+          <div class="zr-prop-img">
+            <img src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260503_145923_c1a9880c-0fab-4a76-8289-bd650d5e5dce.png&w=1280&q=85" alt="Azure Sanctuary" loading="lazy" />
+          </div>
+          <div class="zr-prop-body">
+            <div class="zr-prop-loc">Karibia / Bahamas / Bimini</div>
+            <div class="zr-prop-name">Azure Sanctuary</div>
+            <div class="zr-prop-price">Rp 3,4 Miliar</div>
+            <div class="zr-prop-stats">
+              <span class="zr-stat">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/></svg>
+                <span>250 m²</span>
+              </span>
+              <span class="zr-stat">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                <span>1 Lantai</span>
+              </span>
+              <span class="zr-stat">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>
+                <span>4 Kamar</span>
+              </span>
+              <span class="zr-stat">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-1-.5C4.683 3 4 3.683 4 4.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/><line x1="10" x2="8" y1="5" y2="7"/><line x1="2" x2="22" y1="12" y2="12"/><line x1="7" x2="7" y1="19" y2="21"/><line x1="17" x2="17" y1="19" y2="21"/></svg>
+                <span>1 KM Mandi</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kartu 3 -->
+        <div class="zr-prop-card">
+          <div class="zr-prop-img">
+            <img src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260503_150022_cdda0eaa-1c17-4f59-8188-4f98b328619f.png&w=1280&q=85" alt="Summit Pavilion" loading="lazy" />
+          </div>
+          <div class="zr-prop-body">
+            <div class="zr-prop-loc">AS / Colorado / Vail</div>
+            <div class="zr-prop-name">Summit Pavilion</div>
+            <div class="zr-prop-price">Rp 7,8 Miliar</div>
+            <div class="zr-prop-stats">
+              <span class="zr-stat">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/></svg>
+                <span>400 m²</span>
+              </span>
+              <span class="zr-stat">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                <span>3 Lantai</span>
+              </span>
+              <span class="zr-stat">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>
+                <span>6 Kamar</span>
+              </span>
+              <span class="zr-stat">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-1-.5C4.683 3 4 3.683 4 4.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/><line x1="10" x2="8" y1="5" y2="7"/><line x1="2" x2="22" y1="12" y2="12"/><line x1="7" x2="7" y1="19" y2="21"/><line x1="17" x2="17" y1="19" y2="21"/></svg>
+                <span>3 KM Mandi</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ CARA KERJA ════════════ -->
+  <section class="zr-section zr-hiw-bg">
+    <div class="zr-inner">
+      <div class="zr-sec-header">
+        <div class="zr-sec-title">
+          <h2 class="zr-fade-up">Layanan kami dan prosesnya</h2>
+        </div>
+        <div class="zr-sec-desc zr-fade-in">
+          <p>Tur virtual, portofolio pilihan, dan insight profesional — semua alat untuk mencari dan mengamankan properti dengan mudah.</p>
+        </div>
+      </div>
+
+      <div class="zr-hiw-body zr-fade-up">
+        <div class="zr-hiw-left">
+          <div class="zr-hiw-content">
+            <h3>Koleksi Eksklusif</h3>
+            <p>Konsultan kami menyusun daftar hunian pilihan. Lengkap dengan media, tur VR, dan kunjungan fisik pribadi.</p>
+            <button class="zr-hiw-consult">Konsultasi Gratis</button>
+          </div>
+          <nav class="zr-hiw-nav" aria-label="Layanan">
+            <button>Analisis Pasar</button>
+            <button class="zr-active">Koleksi Eksklusif</button>
+            <button>Dukungan Legal</button>
+            <button>Proses Pembelian</button>
+          </nav>
+        </div>
+        <div class="zr-hiw-right">
+          <img src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260503_150112_2b0e700f-7af4-4459-b326-7d9e2f468daa.png&w=1280&q=85" alt="Interior properti eksklusif" loading="lazy" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ INVESTASI ════════════ -->
+  <section class="zr-section zr-inv-bg">
+    <div class="zr-inner">
+      <div class="zr-sec-header">
+        <div class="zr-sec-title">
+          <h2 class="zr-fade-up">Kerangka terpercaya untuk pertumbuhan yang aman</h2>
+        </div>
+        <div class="zr-sec-desc zr-fade-in">
+          <p>Properti kami lebih dari sekadar bangunan — ini kendaraan untuk kekayaan Anda tumbuh secara konsisten.</p>
+          <p>Kami selektif menyaring penawaran terbaik di pasar untuk setiap mitra kami.</p>
+        </div>
+      </div>
+
+      <div class="zr-charts-grid">
+
+        <div class="zr-chart-card zr-fade-up">
+          <div>
+            <div class="zr-chart-label">Pertumbuhan Tahunan</div>
+            <div class="zr-chart-val">19%</div>
+          </div>
+          <div class="zr-chart-bars">
+            <svg id="zrC1" aria-hidden="true"></svg>
+          </div>
+        </div>
+
+        <div class="zr-chart-card zr-fade-up" style="transition-delay:.1s;">
+          <div>
+            <div class="zr-chart-label">Total Keuntungan</div>
+            <div class="zr-chart-val">Rp12,3 M</div>
+          </div>
+          <div class="zr-chart-bars">
+            <svg id="zrC2" aria-hidden="true"></svg>
+          </div>
+        </div>
+
+        <div class="zr-chart-card zr-fade-up" style="transition-delay:.2s;">
+          <div>
+            <div class="zr-chart-label">Return Rata-rata</div>
+            <div class="zr-chart-val">14%</div>
+          </div>
+          <div class="zr-chart-bars">
+            <svg id="zrC3" aria-hidden="true"></svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <script>
+  (function(){
+    'use strict';
+
+    /* ── Navbar scroll ── */
+    var nav = document.getElementById('zrNav');
+    function onScroll(){
+      if(window.pageYOffset > 40){ nav.classList.add('zr-scrolled'); }
+      else { nav.classList.remove('zr-scrolled'); }
+    }
+    window.addEventListener('scroll', onScroll, {passive:true});
+
+    /* ── Mobile menu ── */
+    var hamburger = document.getElementById('zrHamburger');
+    var mbMenu    = document.getElementById('zrMbMenu');
+    var overlay   = document.getElementById('zrOverlay');
+    var mbClose   = document.getElementById('zrMbClose');
+
+    function openMenu(){
+      mbMenu.classList.add('zr-open');
+      overlay.classList.add('zr-open');
+      mbMenu.setAttribute('aria-hidden','false');
+    }
+    function closeMenu(){
+      mbMenu.classList.remove('zr-open');
+      overlay.classList.remove('zr-open');
+      mbMenu.setAttribute('aria-hidden','true');
+    }
+    if(hamburger) hamburger.addEventListener('click', openMenu);
+    if(mbClose)   mbClose.addEventListener('click', closeMenu);
+    if(overlay)   overlay.addEventListener('click', closeMenu);
+
+    /* ── Scroll-triggered animations ── */
+    var animEls = document.querySelectorAll('.zr-fade-up,.zr-fade-in,.zr-prop-card');
+    if(typeof IntersectionObserver !== 'undefined'){
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting){
+            e.target.classList.add('zr-vis');
+            io.unobserve(e.target);
+          }
+        });
+      },{threshold:0.12});
+      animEls.forEach(function(el){ io.observe(el); });
+    } else {
+      animEls.forEach(function(el){ el.classList.add('zr-vis'); });
+    }
+
+    /* ── HIW nav ── */
+    var hiwBtns = document.querySelectorAll('.zr-hiw-nav button');
+    hiwBtns.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        hiwBtns.forEach(function(b){ b.classList.remove('zr-active'); });
+        this.classList.add('zr-active');
+      });
+    });
+
+    /* ── Bar charts ── */
+    function drawChart(svgId, data){
+      var svg = document.getElementById(svgId);
+      if(!svg) return;
+      var wrap = svg.parentElement;
+      var W = wrap ? wrap.clientWidth  : 300;
+      var H = wrap ? wrap.clientHeight : 96;
+      if(W < 10) W = 300;
+      if(H < 10) H = 96;
+
+      var n   = data.length;
+      var gap = Math.max(3, Math.floor(W * 0.012));
+      var bW  = (W - gap * (n - 1)) / n;
+      var max = Math.max.apply(null, data);
+      var out = '';
+
+      for(var i = 0; i < n; i++){
+        var x = i * (bW + gap);
+        var bH = H * (data[i] / max);
+        var y  = H - bH;
+
+        /* full-height background col */
+        out += '<rect x="' + x.toFixed(1) + '" y="0" width="' + bW.toFixed(1) + '" height="' + H + '" fill="#141414" fill-opacity="0.05"/>';
+        /* solid 2px top cap */
+        out += '<rect x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + bW.toFixed(1) + '" height="2" fill="#141414"/>';
+      }
+
+      svg.setAttribute('viewBox','0 0 ' + W + ' ' + H);
+      svg.setAttribute('preserveAspectRatio','none');
+      svg.innerHTML = out;
+    }
+
+    var charts = [
+      { id:'zrC1', data:[35,60,45,40,55,75,60,80,55,30] },
+      { id:'zrC2', data:[8,12,18,28,32,38,55,70,85] },
+      { id:'zrC3', data:[10,75,20,35,30,65,55,25,40] }
+    ];
+
+    function renderAll(){
+      charts.forEach(function(c){ drawChart(c.id, c.data); });
+    }
+
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', function(){ setTimeout(renderAll, 60); });
+    } else {
+      setTimeout(renderAll, 60);
+    }
+
+    var resizeTimer;
+    window.addEventListener('resize', function(){
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(renderAll, 150);
+    }, {passive:true});
+
+  })();
+  </script>
+</div>
+
+</body>
+</html>
