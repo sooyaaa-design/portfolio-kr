@@ -31,8 +31,6 @@
       background: #0c0c0c;
       color: #fff;
       isolation: isolate;
-      /* Reserve space for the fixed bottom status bar (40px) */
-      padding-bottom: 40px;
     }
     .aura-bg-video {
       position: fixed;
@@ -74,7 +72,7 @@
     /* Offset anchored sections so the fixed navbar doesn't cover their headings */
     section[id] { scroll-margin-top: 84px; }
     .aura-container {
-      width: min(100%, 80rem); /* ~1280px main content, centered */
+      width: min(100%, 72rem);
       margin: 0 auto;
       padding: 0 1.5rem;
     }
@@ -274,7 +272,7 @@
     }
     .aura-hero h1 {
       margin: 0;
-      font-size: clamp(2.5rem, 5vw, 4rem); /* 40px → 64px max on desktop */
+      font-size: clamp(40px, 10vw, 88px);
       font-weight: 700;
       letter-spacing: -0.045em;
       line-height: 1.05;
@@ -290,12 +288,11 @@
       filter: url(#c3-noise);
     }
     .aura-hero p {
-      margin: 32px auto 0;
+      margin: 32px 0 0;
       max-width: 600px;
       color: rgba(255,255,255,0.65);
-      font-size: 1.0625rem; /* ~17px, within 16–18px target */
+      font-size: 16px;
       line-height: 1.6;
-      text-align: center;
     }
     .aura-hero-actions {
       margin-top: 32px;
@@ -306,16 +303,11 @@
     }
 
     .aura-menu-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
       height: 40px;
-      background: rgba(0,0,0,0.55);
+      background: rgba(0,0,0,0.4);
       backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
       border-top: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
     }
     .aura-menu-inner {
       height: 100%;
