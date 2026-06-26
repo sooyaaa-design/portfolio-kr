@@ -68,11 +68,12 @@
     .aura-content {
       position: relative;
       z-index: 10;
+      padding-bottom: 48px;
     }
     /* Offset anchored sections so the fixed navbar doesn't cover their headings */
     section[id] { scroll-margin-top: 84px; }
     .aura-container {
-      width: min(100%, 72rem);
+      width: min(100%, 88rem);
       margin: 0 auto;
       padding: 0 1.5rem;
     }
@@ -272,7 +273,7 @@
     }
     .aura-hero h1 {
       margin: 0;
-      font-size: clamp(40px, 10vw, 88px);
+      font-size: clamp(40px, 5vw, 64px);
       font-weight: 700;
       letter-spacing: -0.045em;
       line-height: 1.05;
@@ -303,11 +304,15 @@
     }
 
     .aura-menu-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
       height: 40px;
       background: rgba(0,0,0,0.4);
       backdrop-filter: blur(12px);
       border-top: 1px solid rgba(255,255,255,0.08);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      z-index: 900;
     }
     .aura-menu-inner {
       height: 100%;
